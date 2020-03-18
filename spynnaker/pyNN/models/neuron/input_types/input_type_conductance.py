@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from spinn_utilities.overrides import overrides
 from data_specification.enums import DataType
 from .abstract_input_type import AbstractInputType
@@ -19,6 +34,12 @@ class InputTypeConductance(AbstractInputType):
         "__e_rev_I"]
 
     def __init__(self, e_rev_E, e_rev_I):
+        """
+        :param float e_rev_E: Reversal potential for excitatory input;
+            :math:`E^{rev}_e`
+        :param float e_rev_I: Reversal potential for inhibitory input;
+            :math:`E^{rev}_i`
+        """
         super(InputTypeConductance, self).__init__([
             DataType.S1615,   # e_rev_E
             DataType.S1615])  # e_rev_I
@@ -65,6 +86,9 @@ class InputTypeConductance(AbstractInputType):
 
     @property
     def e_rev_E(self):
+        """
+        :math:`E_{{rev}_e}`
+        """
         return self.__e_rev_E
 
     @e_rev_E.setter
@@ -73,6 +97,9 @@ class InputTypeConductance(AbstractInputType):
 
     @property
     def e_rev_I(self):
+        """
+        :math:`E_{{rev}_i}`
+        """
         return self.__e_rev_I
 
     @e_rev_I.setter

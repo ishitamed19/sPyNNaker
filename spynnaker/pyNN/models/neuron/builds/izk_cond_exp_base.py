@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from spynnaker.pyNN.models.neuron.input_types import InputTypeConductance
 from spynnaker.pyNN.models.neuron.neuron_models import NeuronModelIzh
 from spynnaker.pyNN.models.neuron.synapse_types import SynapseTypeExponential
@@ -9,6 +24,22 @@ _IZK_THRESHOLD = 30.0
 
 
 class IzkCondExpBase(AbstractPyNNNeuronModelStandard):
+    """ Izhikevich neuron model with conductance inputs.
+
+    :param float a: :math:`a`
+    :param float b: :math:`b`
+    :param float c: :math:`c`
+    :param float d: :math:`d`
+    :param float i_offset: :math:`I_{offset}`
+    :param float u: :math:`u_{init} = \\delta V_{init}`
+    :param float v: :math:`v_{init} = V_{init}`
+    :param float tau_syn_E: :math:`\\tau^{syn}_e`
+    :param float tau_syn_I: :math:`\\tau^{syn}_i`
+    :param float e_rev_E: :math:`E^{rev}_e`
+    :param float e_rev_I: :math:`E^{rev}_i`
+    :param float isyn_exc: :math:`I^{syn}_e`
+    :param float isyn_inh: :math:`I^{syn}_i`
+    """
 
     # noinspection PyPep8Naming
     @default_initial_values({"v", "u", "isyn_exc", "isyn_inh"})

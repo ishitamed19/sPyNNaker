@@ -1,11 +1,28 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import numpy
+
+from data_specification.enums import DataType
 from spinn_utilities.overrides import overrides
 from spynnaker.pyNN.models.neuron.input_types import InputTypeConductance
 from .abstract_neuron_impl import AbstractNeuronImpl
 
 
 class NeuronImplStandard(AbstractNeuronImpl):
-    """ The standard neuron implementation, consisting of various components
+    """ The standard componentised neuron implementation.
     """
 
     __slots__ = [
@@ -21,8 +38,13 @@ class NeuronImplStandard(AbstractNeuronImpl):
 
     _RECORDABLES = ["v", "gsyn_exc", "gsyn_inh"]
 
+    _RECORDABLE_DATA_TYPES = {
+        "v": DataType.S1615,
+        "gsyn_exc": DataType.S1615,
+        "gsyn_inh": DataType.S1615
+    }
+
     _RECORDABLE_UNITS = {
-        'spikes': 'spikes',
         'v': 'mV',
         'gsyn_exc': "uS",
         'gsyn_inh': "uS"}
@@ -30,6 +52,16 @@ class NeuronImplStandard(AbstractNeuronImpl):
     def __init__(
             self, model_name, binary, neuron_model, input_type,
             synapse_type, threshold_type, additional_input_type=None):
+        """
+        :param str model_name:
+        :param str binary:
+        :param AbstractNeuronModel neuron_model:
+        :param AbstractInputType input_type:
+        :param AbstractSynapseType synapse_type:
+        :param AbstractThresholdType threshold_type:
+        :param additional_input_type:
+        :type additional_input_type: AbstractAdditionalInput or None
+        """
         self.__model_name = model_name
         self.__binary = binary
         self.__neuron_model = neuron_model
@@ -109,6 +141,10 @@ class NeuronImplStandard(AbstractNeuronImpl):
     @overrides(AbstractNeuronImpl.get_recordable_units)
     def get_recordable_units(self, variable):
         return self._RECORDABLE_UNITS[variable]
+
+    @overrides(AbstractNeuronImpl.get_recordable_data_types)
+    def get_recordable_data_types(self):
+        return self._RECORDABLE_DATA_TYPES
 
     @overrides(AbstractNeuronImpl.is_recordable)
     def is_recordable(self, variable):

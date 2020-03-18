@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import numpy
 from numpy.lib.recfunctions import merge_arrays
 
@@ -39,27 +54,30 @@ class ConnectionHolder(object):
             self, data_items_to_return, as_list, n_pre_atoms, n_post_atoms,
             connections=None, fixed_values=None, notify=None):
         """
-
         :param data_items_to_return: A list of data fields to be returned
-        :param as_list:\
-            True if the data will be returned as a list, False if it is to be\
+        :type data_items_to_return: list(int) or tuple(int) or None
+        :param bool as_list:
+            True if the data will be returned as a list, False if it is to be
             returned as a matrix (or series of matrices)
-        :param n_pre_atoms: The number of atoms in the pre-vertex
-        :param n_post_atoms: The number of atoms in the post-vertex
-        :param connections:\
-            Any initial connections, as a numpy structured array of\
+        :param int n_pre_atoms: The number of atoms in the pre-vertex
+        :param int n_post_atoms: The number of atoms in the post-vertex
+        :param connections:
+            Any initial connections, as a numpy structured array of
             source, target, weight and delay
-        :param fixed_values:\
-            A list of tuples of field names and fixed values to be appended\
-            to the other fields per connection, formatted as\
-            [(field_name, value), ...].
-            Note that if the field is to be returned, the name must also\
-            appear in data_items_to_return, which determines the order of\
+        :type connections: list(~numpy.ndarray) or None
+        :param fixed_values:
+            A list of tuples of field names and fixed values to be appended
+            to the other fields per connection, formatted as
+            `[(field_name, value), ...]`.
+            Note that if the field is to be returned, the name must also
+            appear in data_items_to_return, which determines the order of
             items in the result
-        :param notify:\
-            A callback to call when the connections have all been added.\
-            This should accept a single parameter, which will contain the\
+        :type fixed_values: list(tuple(str,int)) or None
+        :param notify:
+            A callback to call when the connections have all been added.
+            This should accept a single parameter, which will contain the
             data requested
+        :type notify: callable(ConnectionHolder, None) or None
         """
         # pylint: disable=too-many-arguments
         self.__data_items_to_return = data_items_to_return
@@ -74,8 +92,8 @@ class ConnectionHolder(object):
     def add_connections(self, connections):
         """ Add connections to the holder to be returned
 
-        :param connections:\
-            The connection to add, as a numpy structured array of\
+        :param ~numpy.ndarray connections:
+            The connection to add, as a numpy structured array of
             source, target, weight and delay
         """
         if self.__connections is None:
@@ -85,6 +103,8 @@ class ConnectionHolder(object):
     @property
     def connections(self):
         """ The connections stored
+
+        :rtype: list(~numpy.ndarray)
         """
         return self.__connections
 
@@ -97,7 +117,6 @@ class ConnectionHolder(object):
     def _get_data_items(self):
         """ Merges the connections into the result data format
         """
-
         # If there are already merged connections cached, return those
         if self.__data_items is not None:
             return self.__data_items
@@ -125,7 +144,6 @@ class ConnectionHolder(object):
 
         # If there are additional fixed values, merge them in
         if self.__fixed_values is not None and self.__fixed_values:
-
             # Generate a numpy type for the fixed values
             fixed_dtypes = [
                 ('{}'.format(field[0]), None)
@@ -145,7 +163,6 @@ class ConnectionHolder(object):
 
         # If we are returning a list...
         if self.__as_list:
-
             # ...sort by source then target
             order = numpy.lexsort(
                 (connections["target"], connections["source"]))
@@ -155,26 +172,21 @@ class ConnectionHolder(object):
             if (self.__data_items_to_return is None or
                     not self.__data_items_to_return):
                 self.__data_items = connections[order]
-
             # There is more than one item to return, so let numpy do its magic
             elif len(self.__data_items_to_return) > 1:
                 self.__data_items = \
                     connections[order][self.__data_items_to_return]
-
             # There is 1 item to return, so make sure only one item exists
             else:
                 self.__data_items = \
                     connections[order][self.__data_items_to_return[0]]
-
         else:
-
             if self.__data_items_to_return is None:
                 return []
 
             # Keep track of the matrices
             merged_connections = list()
             for item in self.__data_items_to_return:
-
                 # Build an empty matrix and fill it with NAN
                 matrix = numpy.empty((self.__n_pre_atoms, self.__n_post_atoms))
                 matrix.fill(numpy.nan)
@@ -191,7 +203,6 @@ class ConnectionHolder(object):
             # If there is only one matrix, use it directly
             if len(merged_connections) == 1:
                 self.__data_items = merged_connections[0]
-
             # Otherwise use a tuple of the matrices
             else:
                 self.__data_items = tuple(merged_connections)

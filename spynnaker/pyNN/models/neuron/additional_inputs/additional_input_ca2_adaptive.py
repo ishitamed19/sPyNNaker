@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import numpy
 from spinn_utilities.overrides import overrides
 from data_specification.enums import DataType
@@ -22,6 +37,11 @@ class AdditionalInputCa2Adaptive(AbstractAdditionalInput):
         "__i_alpha"]
 
     def __init__(self,  tau_ca2, i_ca2, i_alpha):
+        r"""
+        :param float tau_ca2: :math:`\tau_{\mathrm{Ca}^{+2}}`
+        :param float i_ca2: :math:`I_{\mathrm{Ca}^{+2}}`
+        :param float i_alpha: :math:`I_{\alpha}`
+        """
         super(AdditionalInputCa2Adaptive, self).__init__([
             DataType.S1615,   # e^(-ts / tau_ca2)
             DataType.S1615,   # i_ca_2
@@ -55,6 +75,10 @@ class AdditionalInputCa2Adaptive(AbstractAdditionalInput):
     @inject_items({"ts": "MachineTimeStep"})
     @overrides(AbstractAdditionalInput.get_values, additional_arguments={'ts'})
     def get_values(self, parameters, state_variables, vertex_slice, ts):
+        """
+        :param int ts: machine time step
+        """
+        # pylint: disable=arguments-differ
 
         # Add the rest of the data
         return [parameters[TAU_CA2].apply_operation(
@@ -72,6 +96,10 @@ class AdditionalInputCa2Adaptive(AbstractAdditionalInput):
 
     @property
     def tau_ca2(self):
+        r""" Settable model parameter: :math:`\tau_{\mathrm{Ca}^{+2}}`
+
+        :rtype: float
+        """
         return self.__tau_ca2
 
     @tau_ca2.setter
@@ -80,6 +108,10 @@ class AdditionalInputCa2Adaptive(AbstractAdditionalInput):
 
     @property
     def i_ca2(self):
+        r""" Settable model parameter: :math:`I_{\mathrm{Ca}^{+2}}`
+
+        :rtype: float
+        """
         return self.__i_ca2
 
     @i_ca2.setter
@@ -88,6 +120,10 @@ class AdditionalInputCa2Adaptive(AbstractAdditionalInput):
 
     @property
     def i_alpha(self):
+        r""" Settable model parameter: :math:`I_{\alpha}`
+
+        :rtype: float
+        """
         return self.__i_alpha
 
     @i_alpha.setter

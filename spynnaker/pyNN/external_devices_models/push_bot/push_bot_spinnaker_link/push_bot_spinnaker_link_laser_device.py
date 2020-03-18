@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from pacman.model.graphs.application import ApplicationSpiNNakerLinkVertex
 from spynnaker.pyNN.external_devices_models.push_bot.push_bot_ethernet import (
     PushBotEthernetLaserDevice)
@@ -22,17 +37,17 @@ class PushBotSpiNNakerLinkLaserDevice(
             start_total_period=default_parameters['start_total_period'],
             start_frequency=default_parameters['start_frequency']):
         """
-
-        :param laser: The PushBotLaser value to control
-        :param protocol: The protocol instance to get commands from
-        :param spinnaker_link_id:\
+        :param PushBotLaser laser: Which laser device to control
+        :param MunichIoSpiNNakerLinkProtocol protocol:
+            The protocol instance to get commands from
+        :param int spinnaker_link_id:
             The SpiNNakerLink that the PushBot is connected to
-        :param n_neurons: The number of neurons in the device
-        :param label: A label for the device
-        :param board_address:\
+        :param int n_neurons: The number of neurons in the device
+        :param str label: A label for the device
+        :param str board_address:
             The IP address of the board that the device is connected to
         :param start_active_time: The "active time" value to send at the start
-        :param start_total_period:\
+        :param start_total_period:
             The "total period" value to send at the start
         :param start_frequency: The "frequency" to send at the start
         """

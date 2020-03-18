@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 import os
 import numpy
@@ -11,7 +26,15 @@ _TMPL_FILENAME = "synaptic_matrix_for_application_edge_{}"
 
 
 class SpYNNakerSynapticMatrixReport(object):
-    """ Generate the synaptic matrix for reporting purposes
+    """ Generate the synaptic matrices for reporting purposes.
+
+    :param str report_folder: where to write the report
+    :param connection_holder: where the synaptic matrices are stored \
+        (possibly after retrieval from the machine)
+    :type connection_holder:
+        dict(tuple(ProjectionApplicationEdge, SynapseInformation), \
+        ConnectionHolder)
+    :param dsg_targets: used to check if connection holders are populated
     """
 
     def __call__(self, report_folder, connection_holder, dsg_targets):

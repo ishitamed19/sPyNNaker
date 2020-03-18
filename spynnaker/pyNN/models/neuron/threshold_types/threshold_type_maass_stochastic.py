@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from spinn_utilities.overrides import overrides
 from data_specification.enums import DataType
 from pacman.executor.injection_decorator import inject_items
@@ -15,7 +30,12 @@ UNITS = {
 
 
 class ThresholdTypeMaassStochastic(AbstractThresholdType):
-    """ A stochastic threshold
+    """ A stochastic threshold.
+
+    Habenschuss S, Jonke Z, Maass W. Stochastic computations in cortical \
+    microcircuit models. *PLoS Computational Biology.* 2013;9(11):e1003311. \
+    `doi:10.1371/journal.pcbi.1003311 \
+    <https://doi.org/10.1371/journal.pcbi.1003311>`_
     """
     __slots__ = [
         "__du_th",
@@ -23,6 +43,11 @@ class ThresholdTypeMaassStochastic(AbstractThresholdType):
         "__v_thresh"]
 
     def __init__(self, du_th, tau_th, v_thresh):
+        r"""
+        :param float du_th: :math:`du_{thresh}`
+        :param float tau_th: :math:`\tau_{thresh}`
+        :param float v_thresh: :math:`V_{thresh}`
+        """
         super(ThresholdTypeMaassStochastic, self).__init__([
             DataType.S1615,   # 1 / du_th
             DataType.S1615,   # 1 / tau_th
@@ -57,6 +82,7 @@ class ThresholdTypeMaassStochastic(AbstractThresholdType):
     @inject_items({"ts": "MachineTimeStep"})
     @overrides(AbstractThresholdType.get_values, additional_arguments={'ts'})
     def get_values(self, parameters, state_variables, vertex_slice, ts):
+        # pylint: disable=arguments-differ
 
         # Add the rest of the data
         return [parameters[DU_TH].apply_operation(lambda x: 1.0 / x),
@@ -65,12 +91,14 @@ class ThresholdTypeMaassStochastic(AbstractThresholdType):
 
     @overrides(AbstractThresholdType.update_values)
     def update_values(self, values, parameters, state_variables):
-
         # Read the data
         (_du_th, _tau_th, _v_thresh, _time_step_ms_div_10) = values
 
     @property
     def v_thresh(self):
+        """
+        :math:`V_{thresh}`
+        """
         return self.__v_thresh
 
     @v_thresh.setter
@@ -79,6 +107,9 @@ class ThresholdTypeMaassStochastic(AbstractThresholdType):
 
     @property
     def du_th(self):
+        """
+        :math:`du_{thresh}`
+        """
         return self.__du_th
 
     @du_th.setter
@@ -87,6 +118,9 @@ class ThresholdTypeMaassStochastic(AbstractThresholdType):
 
     @property
     def tau_th(self):
+        r"""
+        :math:`\tau_{thresh}`
+        """
         return self.__tau_th
 
     @tau_th.setter

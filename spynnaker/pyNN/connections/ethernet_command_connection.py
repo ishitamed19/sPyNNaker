@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from spinn_front_end_common.abstract_models import (
     AbstractSendMeMulticastCommandsVertex)
 from spinn_front_end_common.utilities.constants import NOTIFY_PORT
@@ -16,14 +31,16 @@ class EthernetCommandConnection(DatabaseConnection):
             self, translator, command_containers=None, local_host=None,
             local_port=NOTIFY_PORT):
         """
-        :param translator:\
+        :param AbstractEthernetTranslator translator:
             A translator of multicast commands to device commands
-        :param command_containers:\
-            A list of instances of AbstractSendMeMulticastCommandsVertex that\
-            have commands to be sent at the start and end of simulation
-        :param local_host:\
+        :param command_containers:
+            A list of vertices that have commands to be sent at the start \
+            and end of simulation
+        :type command_containers:
+            list(~spinn_front_end_common.abstract_models.AbstractSendMeMulticastCommandsVertex)
+        :param str local_host:
             The optional host to listen on for the start/resume message
-        :param local_port:\
+        :param int local_port:
             The optional port to listen on for the stop/pause message
         """
 
@@ -41,9 +58,11 @@ class EthernetCommandConnection(DatabaseConnection):
     def add_command_container(self, command_container):
         """ Add a command container.
 
-        :param command_container:\
-            An instance of AbstractSendMeMulticastCommandsVertex that\
-            has commands to be sent at the start and end of simulation
+        :param command_container:
+            A vertex that has commands to be sent at the start and end of \
+            simulation
+        :type command_container:
+            ~spinn_front_end_common.abstract_models.AbstractSendMeMulticastCommandsVertex
         """
         if not isinstance(
                 command_container, AbstractSendMeMulticastCommandsVertex):

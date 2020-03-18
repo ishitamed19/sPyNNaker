@@ -1,11 +1,31 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from spinn_utilities.overrides import overrides
 from data_specification.enums import DataType
+from spinn_front_end_common.utilities.constants import BYTES_PER_WORD
 from .abstract_has_a_plus_a_minus import AbstractHasAPlusAMinus
 from .abstract_weight_dependence import AbstractWeightDependence
+# Six words per synapse type
+_SPACE_PER_SYNAPSE_TYPE = 6 * BYTES_PER_WORD
 
 
 class WeightDependenceAdditiveTriplet(
         AbstractHasAPlusAMinus, AbstractWeightDependence):
+    """ An triplet-based additive weight dependence STDP rule.
+    """
     __slots__ = [
         "__a3_minus",
         "__a3_plus",
@@ -21,6 +41,12 @@ class WeightDependenceAdditiveTriplet(
             w_max=default_parameters['w_max'],
             A3_plus=default_parameters['A3_plus'],
             A3_minus=default_parameters['A3_minus']):
+        """
+        :param float w_min: :math:`w^{min}`
+        :param float w_max: :math:`w^{max}`
+        :param float A3_plus: :math:`A_3^+`
+        :param float A3_minus: :math:`A_3^-`
+        """
         super(WeightDependenceAdditiveTriplet, self).__init__()
         self.__w_min = w_min
         self.__w_max = w_max
@@ -29,18 +55,34 @@ class WeightDependenceAdditiveTriplet(
 
     @property
     def w_min(self):
+        """ :math:`w^{min}`
+
+        :rtype: float
+        """
         return self.__w_min
 
     @property
     def w_max(self):
+        """ :math:`w^{max}`
+
+        :rtype: float
+        """
         return self.__w_max
 
     @property
     def A3_plus(self):
+        """ :math:`A_3^+`
+
+        :rtype: float
+        """
         return self.__a3_plus
 
     @property
     def A3_minus(self):
+        """ :math:`A_3^-`
+
+        :rtype: float
+        """
         return self.__a3_minus
 
     @overrides(AbstractWeightDependence.is_same_as)
@@ -57,6 +99,10 @@ class WeightDependenceAdditiveTriplet(
 
     @property
     def vertex_executable_suffix(self):
+        """ The suffix to be appended to the vertex executable for this rule
+
+        :rtype: str
+        """
         return "additive"
 
     @overrides(AbstractWeightDependence.get_parameters_sdram_usage_in_bytes)
@@ -65,7 +111,7 @@ class WeightDependenceAdditiveTriplet(
         if n_weight_terms != 2:
             raise NotImplementedError(
                 "Additive weight dependence only supports one or two terms")
-        return (6 * 4) * n_synapse_types
+        return _SPACE_PER_SYNAPSE_TYPE * n_synapse_types
 
     @overrides(AbstractWeightDependence.write_parameters)
     def write_parameters(
@@ -98,6 +144,11 @@ class WeightDependenceAdditiveTriplet(
 
     @property
     def weight_maximum(self):
+        """ The maximum weight that will ever be set in a synapse as a result\
+            of this rule
+
+        :rtype: float
+        """
         return self.__w_max
 
     @overrides(AbstractWeightDependence.get_parameter_names)

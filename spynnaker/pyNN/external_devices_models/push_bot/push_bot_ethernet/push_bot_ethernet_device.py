@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from six import with_metaclass
 from spinn_utilities.overrides import overrides
 from spinn_utilities.abstract_base import AbstractBase, abstractmethod
@@ -14,8 +29,11 @@ class PushBotEthernetDevice(with_metaclass(
             self, protocol, device, uses_payload, time_between_send):
         """
         :param protocol: The protocol instance to get commands from
+        :type protocol: MunichIoEthernetProtocol
         :param device: The Enum instance of the device to control
+        :type device: AbstractPushBotOutputDevice
         :param uses_payload: True if the device uses a payload for control
+        :type uses_payload: bool
         """
         self.__protocol = protocol
         self.__device = device
@@ -64,11 +82,16 @@ class PushBotEthernetDevice(with_metaclass(
     @property
     def protocol(self):
         """ The protocol instance, for use in the subclass
+
+        :rtype: MunichIoEthernetProtocol
         """
         return self.__protocol
 
     @abstractmethod
     def set_command_protocol(self, command_protocol):
         """ Set the protocol use to send setup and shutdown commands,\
-            separately from the protocol used to control the device
+            separately from the protocol used to control the device.
+
+        :param command_protocol: The protocol to use for this device
+        :type command_protocol: MunichIoSpiNNakerLinkProtocol
         """

@@ -1,15 +1,40 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from spynnaker.pyNN.models.neuron import AbstractPyNNNeuronModelStandard
 from spynnaker.pyNN.models.defaults import default_initial_values
 from spynnaker.pyNN.models.neuron.neuron_models import (
     NeuronModelLeakyIntegrateAndFire)
-from spynnaker.pyNN.models.neuron.input_types import InputTypeCurrent
+from spynnaker.pyNN.models.neuron.input_types import InputTypeDelta
 from spynnaker.pyNN.models.neuron.threshold_types import ThresholdTypeStatic
 from spynnaker.pyNN.models.neuron.synapse_types import SynapseTypeDelta
 
 
 class IFCurrDelta(AbstractPyNNNeuronModelStandard):
-    """ Leaky integrate and fire neuron with an instantaneous \
-        current input
+    """ Leaky integrate and fire neuron with an instantaneous current input.
+
+    :param float tau_m: :math:`\\tau_m`
+    :param float cm: :math:`C_m`
+    :param float v_rest: :math:`V_{rest}`
+    :param float v_reset: :math:`V_{reset}`
+    :param float v_thresh: :math:`V_{thresh}`
+    :param float tau_refrac: :math:`\\tau_{refrac}`
+    :param float i_offset: :math:`I_{offset}`
+    :param float v: :math:`V_{init}`
+    :param float isyn_exc: :math:`I^{syn}_e`
+    :param float isyn_inh: :math:`I^{syn}_i`
     """
 
     # noinspection PyPep8Naming
@@ -21,8 +46,8 @@ class IFCurrDelta(AbstractPyNNNeuronModelStandard):
         # pylint: disable=too-many-arguments, too-many-locals
         neuron_model = NeuronModelLeakyIntegrateAndFire(
             v, v_rest, tau_m, cm, i_offset, v_reset, tau_refrac)
-        synapse_type = SynapseTypeDelta(isyn_inh, isyn_exc)
-        input_type = InputTypeCurrent()
+        synapse_type = SynapseTypeDelta(isyn_exc, isyn_inh)
+        input_type = InputTypeDelta()
         threshold_type = ThresholdTypeStatic(v_thresh)
 
         super(IFCurrDelta, self).__init__(

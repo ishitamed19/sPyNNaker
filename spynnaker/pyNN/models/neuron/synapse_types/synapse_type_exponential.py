@@ -1,3 +1,18 @@
+# Copyright (c) 2017-2019 The University of Manchester
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import numpy
 from spinn_utilities.overrides import overrides
 from data_specification.enums import DataType
@@ -25,6 +40,12 @@ class SynapseTypeExponential(AbstractSynapseType):
         "__isyn_inh"]
 
     def __init__(self, tau_syn_E, tau_syn_I, isyn_exc, isyn_inh):
+        r"""
+        :param float tau_syn_E: :math:`\tau^{syn}_e`
+        :param float tau_syn_I: :math:`\tau^{syn}_i`
+        :param float isyn_exc: :math:`I^{syn}_e`
+        :param float isyn_inh: :math:`I^{syn}_i`
+        """
         super(SynapseTypeExponential, self).__init__([
             DataType.U032,    # decay_E
             DataType.U032,    # init_E
@@ -62,6 +83,10 @@ class SynapseTypeExponential(AbstractSynapseType):
     @inject_items({"ts": "MachineTimeStep"})
     @overrides(AbstractSynapseType.get_values, additional_arguments={'ts'})
     def get_values(self, parameters, state_variables, vertex_slice, ts):
+        """
+        :param int ts: machine time step
+        """
+        # pylint: disable=arguments-differ
 
         tsfloat = float(ts) / 1000.0
         decay = lambda x: numpy.exp(-tsfloat / x)  # noqa E731
